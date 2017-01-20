@@ -1,7 +1,3 @@
-
-# A class should have one single job
-
-# this is your base class 
 class Chromatic:
 
 	whole_step = 2 
@@ -11,19 +7,20 @@ class Chromatic:
 
 	default_flat = ['f']
 	default_flat_minor = ['c', 'd', 'g']
-	
-	chromatic = ['c', 'c#', 'd', 'd#', 'e', 'f', 'f#',  'g', 'g#', 'a', 'a#', 'b' ]
-	chromatic_flats = ['c', 'db', 'd', 'eb', 'e', 'f', 'gb', 'g', 'ab', 'a', 'bb', 'b']
-	
+
+	def __init__(self):
+		self.chromatic = ['c', 'c#', 'd', 'd#', 'e', 'f', 'f#',  'g', 'g#', 'a', 'a#', 'b' ]
+		self.chromatic_flats = ['c', 'db', 'd', 'eb', 'e', 'f', 'gb', 'g', 'ab', 'a', 'bb', 'b']
+
 
 	def valid_note(self, note):
-		
 		note = note.lower()
 
 		if note in self.chromatic or note in self.chromatic_flats:
 			return True
+		else:
+			return False
 
-		return False
 
 	def is_flat(self, tonic):
 
@@ -90,33 +87,30 @@ class Diatonic(Chromatic):
 	
 	''' Representation of Diatonic major and minor scales. The scale will default to c major '''
 
-	TONIC = 0 
-	SUPERTONIC = 1
-	MEDIANT = 2 
-	SUBDOMINANT = 3 
-	DOMINANT = 4 
-	SUBMEDIANT = 5
-	SUBTONIC = 6 
 
-	MAJOR_FORMULA = {
-		'whole_steps' : [0,2,5,7,9], 
+	TONIC = 0
+	SUPERTONIC = 1
+	MEDIANT = 2
+	SUBDOMINANT = 3
+	DOMINANT = 4
+	SUBMEDIANT = 5
+	SUBTONIC = 6
+
+	__MAJOR_FORMULA = {
+		'whole_steps' : [0,2,5,7,9],
 		'half_steps' : [4,11]
 	}
 
-	MINOR_FORMULA = {
+	__MINOR_FORMULA = {
+
 		'whole_steps' : [0,3,5,8,10], 
 		'half_steps' : [2,7]
 	}
 
 	def __init__(self, tonic='c', major=True, **kwargs):
 		super().__init__(**kwargs)
+		self.tonic = tonic
 		self.major = major
-		tonic = tonic.lower()
-		self.scale = self.get_scale(
-				tonic, 
-				self.scale_formula['whole_steps'], 
-				self.scale_formula['half_steps']
-			)
 
 
 	@property
@@ -125,7 +119,6 @@ class Diatonic(Chromatic):
 
 	@major.setter
 	def major(self, major):
-		print('called major setter')
 		if isinstance(major, bool):
 			self.__major = major
 		else:
@@ -135,74 +128,69 @@ class Diatonic(Chromatic):
 	@property
 	def scale_formula(self):
 		if self.__major :
-			return self.MAJOR_FORMULA
+			return self.__MAJOR_FORMULA
 		else: 
-			return self.MINOR_FORMULA
+			return self.__MINOR_FORMULA
+
+	@property
+	def scale(self):
+		return self.get_scale(self.tonic, self.scale_formula['whole_steps'],
+			self.scale_formula['half_steps'])
 
 	@property
 	def tonic(self):
-		return self.scale[Diatonic.TONIC]
+		return self.__tonic
+
 
 	@tonic.setter
-	def tonic(self, tonic) :
-		if valid_note(tonic.lower()):
-			self.__tonic = tonic.lower()
-		else: 
-			raise Exception('Invalid Note')
-
+	def tonic(self, tonic):
+		# if self.valid_note(tonic.lower()):
+		# 	self.__tonic_char = tonic.lower()
+		# else:
+		# 	raise Exception('Invalid note')
+		self.__tonic = tonic.lower()
 
 	@property
 	def supertonic(self):
-		return self.scale[Diatonic.SUPERTONIC]
+		return self.scale[self.SUPERTONIC]
 
-	@property 
+
+	@property
 	def mediant(self):
-		return self.scale[Diatonic.MEDIANT]
+		return self.scale[self.MEDIANT]
 
 	@property
 	def subdominant(self):
-		return self.scale[Diatonic.SUBDOMINANT]
+		return self.scale[self.SUBDOMINANT]
 
 	@property
 	def dominant(self):
-		return self.scale[Diatonic.DOMINANT]
+		return self.scale[self.DOMINANT]
 
 	@property
 	def submediant(self):
-		return self.scale[Diatonic.SUBMEDIANT]
+		return self.scale[self.SUBMEDIANT]
 
 	@property
 	def subtonic(self):
-		return self.scale[Diatonic.SUBTONIC]
+		return self.scale[self.SUBTONIC]
 
-
-	# @property
-	# def scale(self):
-	# 	return self.get_scale(self.tonic, self.__scale_formula['whole_steps'], 
-	# 		self.__scale_formula['half_steps'])
-		
-
-	# @scale.setter
-	# def scale(self, test): 
-	# 	if self.valid_note(self.tonic):
-	# 		return self.get_scale(self.tonic, self.__scale_formula['whole_steps'], 
-	# 			self.__scale_formula['half_steps'])
 
 	def __str__(self):
 		return ', '.join(self.scale)
 
-
-# major and minor are now really easy implementations
 class Major(Diatonic):
 
+	'Major exists just to make the API cleaner.You could also just instantiate Diatonic'
 	def __init__(self, tonic='c', **kwargs):
-		super().__init__(tonic, **kwargs)
+		super().__init__(tonic, major=True, **kwargs)
+
 
 
 class Minor(Diatonic):
 
 	def __init__(self, tonic='c', **kwargs):
-		super().__init__(tonic, major=True, **kwargs)
+		super().__init__(tonic, major=False, **kwargs)
 
 
 
@@ -257,8 +245,11 @@ class MinorPentatonic(Diatonic, Pentatonic):
 
 if __name__ == '__main__' :
 
-	penta = MinorPentatonic('e')
-	print(penta.bluesy)
+	c = Minor(tonic='db')
+	# print(c.supertonic)
+	c.tonic='a'
+	print(c.tonic)
+	for i in [c.tonic, c.supertonic, c.mediant, c.submediant, c.dominant, c.subdominant, c.subtonic]:
+		print(i)
 
 
-	

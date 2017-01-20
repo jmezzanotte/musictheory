@@ -1,25 +1,48 @@
-from scales import * 
-
-class Triads(Diatonic):
+class Triad:
 	
-	def __init__(self, **kwargs):
-		super().__init__(**kwargs) 
+	def __init__(self, scale, **kwargs):
+		super().__init__(**kwargs)
+		self.scale = scale
 
 	@Diatonic.tonic.getter
 	def tonic(self):
-		print('attempted to call')
-		return [super().tonic, super().mediant, super().dominant]
 
-	@property 
+		return [self.scale.tonic, self.scale.mediant, self.scale.dominant]
+
+	@property
 	def supertonic(self):
-		return [super().supertonic, super().subdominant, super().submediant]
+		return [self.scale.supertonic, self.scale.subdominant, self.scale.submediant]
 
 	@property
 	def mediant(self):
-		return [super().mediant, super().dominant, super().leading_tone]
-
+		return [self.scale.mediant, self.scale.dominant, self.scale.subtonic]
 
 	@property
 	def subdominant(self):
-		return [super().subdominant, super().submediant, super().tonic]
+		return [self.scale.subdominant, self.scale.submediant, self.scale.tonic]
+
+	@property
+	def dominant(self):
+		return [self.scale.dominant, self.scale.subtonic, self.scale.supertonic]
+
+	@property
+	def submediant(self):
+		return [self.scale.submediant, self.scale.tonic, self.scale.mediant]
+
+	@property
+	def subtonic(self):
+		return [self.scale.subtonic, self.scale.supertonic, self.scale.subdominant]
+
+
+	def __str__(self):
+		return 'Triads of the {tonic} {scale_type} scale ({scale})'.format(
+			tonic=self.scale.tonic.upper(),
+			scale_type=self.scale.__class__.__name__,
+			scale=str(self.scale))
+
+
+class Sevenths:
+
+	pass
+
 
