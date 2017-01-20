@@ -5,8 +5,9 @@ class Triads(Diatonic):
 	def __init__(self, **kwargs):
 		super().__init__(**kwargs) 
 
-	@property
+	@Diatonic.tonic.getter
 	def tonic(self):
+		print('attempted to call')
 		return [super().tonic, super().mediant, super().dominant]
 
 	@property 
