@@ -4,8 +4,9 @@ class Triad:
 		super().__init__(**kwargs)
 		self.scale = scale
 
-	@property
+	@Diatonic.tonic.getter
 	def tonic(self):
+
 		return [self.scale.tonic, self.scale.mediant, self.scale.dominant]
 
 	@property

@@ -14,13 +14,13 @@ class Chromatic:
 
 
 	def valid_note(self, note):
-
 		note = note.lower()
 
 		if note in self.chromatic or note in self.chromatic_flats:
 			return True
 		else:
 			return False
+
 
 	def is_flat(self, tonic):
 
@@ -87,6 +87,7 @@ class Diatonic(Chromatic):
 	
 	''' Representation of Diatonic major and minor scales. The scale will default to c major '''
 
+
 	TONIC = 0
 	SUPERTONIC = 1
 	MEDIANT = 2
@@ -101,15 +102,16 @@ class Diatonic(Chromatic):
 	}
 
 	__MINOR_FORMULA = {
+
 		'whole_steps' : [0,3,5,8,10], 
 		'half_steps' : [2,7]
 	}
 
 	def __init__(self, tonic='c', major=True, **kwargs):
-
 		super().__init__(**kwargs)
 		self.tonic = tonic
 		self.major = major
+
 
 	@property
 	def major(self):
@@ -121,6 +123,7 @@ class Diatonic(Chromatic):
 			self.__major = major
 		else:
 			raise TypeError('Expected a boolean value')
+
 
 	@property
 	def scale_formula(self):
@@ -138,6 +141,7 @@ class Diatonic(Chromatic):
 	def tonic(self):
 		return self.__tonic
 
+
 	@tonic.setter
 	def tonic(self, tonic):
 		# if self.valid_note(tonic.lower()):
@@ -149,6 +153,7 @@ class Diatonic(Chromatic):
 	@property
 	def supertonic(self):
 		return self.scale[self.SUPERTONIC]
+
 
 	@property
 	def mediant(self):
@@ -170,9 +175,9 @@ class Diatonic(Chromatic):
 	def subtonic(self):
 		return self.scale[self.SUBTONIC]
 
+
 	def __str__(self):
 		return ', '.join(self.scale)
-
 
 class Major(Diatonic):
 
@@ -181,10 +186,12 @@ class Major(Diatonic):
 		super().__init__(tonic, major=True, **kwargs)
 
 
+
 class Minor(Diatonic):
 
 	def __init__(self, tonic='c', **kwargs):
 		super().__init__(tonic, major=False, **kwargs)
+
 
 
 class Pentatonic(Chromatic):
