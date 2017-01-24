@@ -1,6 +1,7 @@
 import chords
 import sys
 
+#small change for git test
 #x  = chords.get_scale_degrees('A#')
 #print(x)
 
